@@ -35,6 +35,6 @@ public class GyroTest : MonoBehaviour
     // This is slightly modified from the docs, so it might not be correct for all objects, but it worked better for the cube test.
     private static Quaternion GyroToUnity(Quaternion q)
     {
-        return new Quaternion(q.x, q.z, q.y, -q.w);
+        return new Quaternion(q.x, q.y, -q.z, -q.w);
     }
 }
