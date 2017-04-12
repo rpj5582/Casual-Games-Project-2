@@ -28,12 +28,6 @@ public class Player : NetworkBehaviour {
     }
     private void Update()
     {
-        if (!isPinged)
-        {
-            m_timeElapsed = 0;
-            CmdPing();
-        }
-        m_timeElapsed += Time.deltaTime;
          
     }
 }

@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class KNetworkManager : NetworkManager {
-    List<Player> playerObjects = new List<Player>(); 
+    List<Player> playerObjects = new List<Player>();
+    [SerializeField]
+    Network.Actor P_EXAMPLE;
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
         base.OnServerAddPlayer(conn, playerControllerId);
@@ -17,7 +19,14 @@ public class KNetworkManager : NetworkManager {
     }
     private void Update()
     {
-       
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            var actor = Instantiate<Network.Actor>(P_EXAMPLE);
+            NetworkServer.Spawn(actor.gameObject);
+            actor.transform.position = new Vector3(0, 10, 0);
+            actor.gameObject.AddComponent<Rigidbody>();
+
+        }
     }
 
 }
