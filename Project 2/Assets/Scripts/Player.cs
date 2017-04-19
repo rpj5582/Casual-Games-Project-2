@@ -26,6 +26,11 @@ public class Player : NetworkBehaviour {
         Debug.Log("I just received my ping at time... " + m_timeElapsed);
         isPinged = false;
     }
+	//used to receive the player's character that just got created from the server
+	[TargetRpc]
+	public void TargetPlayerCharacter(NetworkConnection conn, NetworkInstanceId id){
+
+	}
     private void Update()
     {
          

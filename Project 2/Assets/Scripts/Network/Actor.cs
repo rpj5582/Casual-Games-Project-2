@@ -34,6 +34,7 @@ namespace Network {
             acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
             m_acts.Add(acts);
         }
+
         [TargetRpc]
         public void TargetNewPosition(NetworkConnection conn, Vector3 position)
         {
