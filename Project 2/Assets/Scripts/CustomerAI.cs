@@ -24,13 +24,22 @@ public class CustomerAI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-        if(state = CustomerState.WALKING)
+        if(state == CustomerState.WALKING)
         {
+			
             //seek next
+			Vector3 distance = next.transform.position - transform.position;
             //if reached next
-                pathProgress++;
-                next = path[pathProgress];
-        }
+			if (distance.magnitude < maxSpeed) {
+				pathProgress++;
+				next = path [pathProgress];
+			} 
+			//if haven't reached, move closer
+			else {
+
+				transform.position += distance.normalized * maxSpeed;
+			}
+		}
 	}
 
     //tells customer to follow path to its end
@@ -42,9 +51,10 @@ public class CustomerAI : MonoBehaviour {
         pathProgress = 0;
         next = path[pathProgress];
     }
-    //tells customer to leave the way they came
-    public void ReversePath()
-    {
-
-    }
+    
+	//tells customer to leave the way they came
+	public void Leave(){
+		path.Reverse ();
+		FollowPath(path);
+	}
 }
