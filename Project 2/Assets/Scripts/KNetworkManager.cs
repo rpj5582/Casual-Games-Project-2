@@ -31,7 +31,10 @@ public class KNetworkManager : NetworkManager {
 	void SpawnPlayer(NetworkConnection conn, Player player){
 		var playerCharacter = Instantiate<Network.Actor> (P_PLAYER_CHARACTER);
 		playerCharacter.transform.position = new Vector3 (0, 10, 0);
-		playerCharacter.gameObject.AddComponent<Rigidbody>();
+		var rigidbody = playerCharacter.gameObject.AddComponent<Rigidbody>();
+		rigidbody.constraints |= RigidbodyConstraints.FreezeRotationX;
+		rigidbody.constraints |= RigidbodyConstraints.FreezeRotationZ;
+
 		NetworkServer.Spawn (playerCharacter.gameObject);
 		player.TargetPlayerCharacter (conn, playerCharacter.netId);
 
