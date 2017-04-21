@@ -11,7 +11,7 @@ namespace Network {
     {
         //assuming that we have 60 ticks per second
         int MIN_INTERPOLATION_TICK = 2;
-        const float INTERPOLATION_TIME = 1.0f/60f;
+        const float INTERPOLATION_TIME = 0.02f;
 
 
         public enum ActorState { IDL, ACTING};
@@ -24,24 +24,25 @@ namespace Network {
         //accessor
         ActorState STATE { get { return m_state; } }
 
-        [ClientRpc]
-        public void RpcNewPosition(Vector3 position)
-        {
-            //this.transform.position = position;
-            //return;
-            //Debug.Log("Received NEW POSITON");
-            List<Act.IAct> acts = new List<Act.IAct>();
-            acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
-            m_acts.Add(acts);
-        }
+		[ClientRpc]
+		public void RpcNewPosition(Vector3 position)
+		{
+			//this.transform.position = position;
+			//return;
+			//Debug.Log("Received NEW POSITON");
+			List<Act.IAct> acts = new List<Act.IAct>();
+			acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
+			m_acts.Add(acts);
+		}
 
-        [TargetRpc]
-        public void TargetNewPosition(NetworkConnection conn, Vector3 position)
-        {
-            List<Act.IAct> acts = new List<Act.IAct>();
-            acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
 
-        }
+		[TargetRpc]
+		public void TargetNewPosition(NetworkConnection conn, Vector3 position)
+		{
+			List<Act.IAct> acts = new List<Act.IAct>();
+			acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
+
+		}
         void fixedUpdateServer()
         {
 
@@ -63,14 +64,21 @@ namespace Network {
         }
         void hprUpdateActProcessed(List<Act.IAct> acts, float timeElapsed)
         {
+			float timeLeftOver = timeElapsed;
             for (int i = acts.Count - 1; i >= 0; i--)
             {
-                acts[i].update(this, timeElapsed);
+				timeLeftOver = Mathf.Min(timeLeftOver, acts[i].update(this, timeElapsed) );
                 if (acts[i].isFinished(this))
                 {
                     acts.RemoveAt(i);
                 }
             }
+			if (timeLeftOver > 0.0001f) {
+				//Debug.Log ("Extra time that's not processed " + timeLeftOver);
+				if (hprGetNewAction ()) {
+					hprUpdateActProcessed (m_actProcessed, timeLeftOver);
+				}
+			}
         }
         void updateClinet(float timeElapsed)
         {

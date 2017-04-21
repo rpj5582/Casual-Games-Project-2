@@ -23,11 +23,17 @@ public class KNetworkManager : NetworkManager {
             var playerObj = NetworkServer.FindLocalObject(networkObjectID).GetComponent<Player>();
             if (playerObj == null) continue;
 			playerInformation.m_player = playerObj;
+			SpawnPlayer (conn, playerObj);
         }
     }
 	//Spawn a player's character.
 	//Call this function only once?
-	void SpawnPlayer(NetworkConnection conn){
+	void SpawnPlayer(NetworkConnection conn, Player player){
+		var playerCharacter = Instantiate<Network.Actor> (P_PLAYER_CHARACTER);
+		playerCharacter.transform.position = new Vector3 (0, 10, 0);
+		playerCharacter.gameObject.AddComponent<Rigidbody>();
+		NetworkServer.Spawn (playerCharacter.gameObject);
+		player.TargetPlayerCharacter (conn, playerCharacter.netId);
 
 	}
 	void spawnPlayerActors(){

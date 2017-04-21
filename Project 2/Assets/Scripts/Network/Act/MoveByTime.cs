@@ -29,11 +29,17 @@ namespace Network.Act
         {
             return m_time == m_timeMax;
         }
-        public override void update(Actor actor, float timeElapsed)
+        public override float update(Actor actor, float timeElapsed)
         {
+			float timeBefore = m_time;
             m_time = Mathf.Min(m_timeMax, m_time + timeElapsed);
+			float timeAdded = m_time - timeBefore;
+
+
             float ratio = m_time / m_timeMax;
             actor.transform.position = Vector3.Lerp(m_posFrom, m_posTo, ratio);
+
+			return timeElapsed - timeAdded;
         }
 
     }

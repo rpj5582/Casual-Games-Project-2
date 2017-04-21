@@ -17,9 +17,10 @@ namespace Network.Act
         {
             return true;
         }
-        public virtual void update(Actor actor, float timeElapsed)
+		//return time not used
+        public virtual float update(Actor actor, float timeElapsed)
         {
-
+			return 0;
         }
     }
 }
