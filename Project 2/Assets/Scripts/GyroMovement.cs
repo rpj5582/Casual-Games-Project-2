@@ -5,14 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class GyroMovement : MonoBehaviour
 {
+	public float moveSpeed;
+	public float movementDeadzone;
+
     private Rigidbody rbody;
     
     private Quaternion initialRotation;
     private Quaternion initialInverseGyroRotation;
 
     private GameObject movementCube;
-
-    private Vector3 movementVector = Vector3.zero;
 
     // Use this for initialization
     void Start()
@@ -37,13 +38,25 @@ public class GyroMovement : MonoBehaviour
         Quaternion offsetRotation = initialInverseGyroRotation * GyroToUnity(Input.gyro.attitude);
         movementCube.transform.rotation = initialRotation * offsetRotation;
 
-        movementVector = Vector3.ProjectOnPlane(movementCube.transform.up, Vector3.up);
-        rbody.velocity = movementVector;
+        Vector3 movementVector = Vector3.ProjectOnPlane(movementCube.transform.up, Vector3.up);
+		if (movementVector.sqrMagnitude >= movementDeadzone * movementDeadzone)
+		{
+			rbody.velocity = movementVector * moveSpeed;
+		}
+		else
+		{
+			rbody.velocity = Vector3.zero;
+		}
+
+		float rotationAngle = Vector3.Dot (movementVector, transform.right);
+		transform.RotateAround(transform.position, Vector3.up, rotationAngle);
+
     }
 
     // Converts the gyroscope's coordinates to unity's coordinates.
+	// This function is modified to work for the cube's top face specifically so the up vector can be used to move the player
     private static Quaternion GyroToUnity(Quaternion q)
     {
-        return new Quaternion(q.x, q.y, -q.z, -q.w);
+        return new Quaternion(q.x, q.z, q.y, -q.w);
     }
 }
