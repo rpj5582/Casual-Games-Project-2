@@ -5,48 +5,60 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Network {
-
-
     public class Actor : NetworkBehaviour
     {
         //assuming that we have 60 ticks per second
         int MIN_INTERPOLATION_TICK = 2;
-        const float INTERPOLATION_TIME = 0.02f;
-
-
+        //const float MIN_POSITION_CHANGE = 0.001f;
+        //const float MIN_POSITION_CHANGE_SQUARE = MIN_POSITION_CHANGE * MIN_POSITION_CHANGE;
+        
         public enum ActorState { IDL, ACTING};
         ActorState m_state = ActorState.IDL;
-        List<List<Act.IAct>> m_acts = new List<List<Act.IAct>>();
+        public List<List<Act.IAct>> m_acts = new List<List<Act.IAct>>();
         List<Act.IAct> m_actProcessed = null;
-        Vector3 m_position = Vector3.zero; 
-
+        //Vector3 m_position = Vector3.zero; 
+        //float m_timeBeforeMoved = 0;
+        
 
         //accessor
         ActorState STATE { get { return m_state; } }
-
-		[ClientRpc]
-		public void RpcNewPosition(Vector3 position)
-		{
-			//this.transform.position = position;
-			//return;
-			//Debug.Log("Received NEW POSITON");
-			List<Act.IAct> acts = new List<Act.IAct>();
-			acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
-			m_acts.Add(acts);
-		}
-
-
-		[TargetRpc]
-		public void TargetNewPosition(NetworkConnection conn, Vector3 position)
-		{
-			List<Act.IAct> acts = new List<Act.IAct>();
-			acts.Add(new Act.MoveByTime(position, INTERPOLATION_TIME));
-
-		}
-        void fixedUpdateServer()
+        private void Start()
+        {
+        }
+       
+        public void processThisActImmediately(List<Act.IAct> act)
         {
 
-            RpcNewPosition(this.transform.position);
+        }
+        public void stop()
+        {
+            m_state = ActorState.IDL;
+            m_actProcessed = null;
+            m_acts.Clear();
+        }
+        [ClientRpc]
+		public void RpcNewPosition(Vector3 position,float time)
+		{
+            if (isServer) return;
+            hdrNewPosition(position, time);
+
+        }
+        [TargetRpc]
+        public void TargetNewPosition(NetworkConnection conn, Vector3 position, float time)
+        {
+            hdrNewPosition(position, time);
+        }
+        public void hdrNewPosition(Vector3 position, float time)
+        {
+            List<Act.IAct> acts = new List<Act.IAct>();
+            acts.Add(new Act.MoveByTime(position, time));
+            m_acts.Add(acts);
+
+        }
+        
+
+        void fixedUpdateServer()
+        {
         }
         void updateServer()
         {
@@ -117,11 +129,11 @@ namespace Network {
         }
         private void Update()
         {
+            updateClinet(Time.deltaTime);
             if (isServer)
                 updateServer();
             else {
                 //Debug.Log("Act count "+m_acts.Count);
-                updateClinet(Time.deltaTime);
             }
         }
     }
