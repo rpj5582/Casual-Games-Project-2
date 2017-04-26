@@ -17,12 +17,18 @@ public class GyroMovement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+		Screen.autorotateToPortrait = false;
+		Screen.autorotateToPortraitUpsideDown = false;
+		Screen.orientation = ScreenOrientation.LandscapeLeft;
+
         Input.gyro.enabled = true;
+		Debug.Log (Input.gyro.enabled);
 
         rbody = GetComponent<Rigidbody>();
 
         movementCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        movementCube.GetComponent<Renderer>().enabled = false;
+        movementCube.GetComponent<Renderer>().enabled = true;
+		movementCube.transform.Rotate (Vector3.up, 90);
         movementCube.name = "Player Movement Cube";
 
         // Saves the initial rotation for the cube and device
@@ -39,14 +45,14 @@ public class GyroMovement : MonoBehaviour
 
     //    movementVector = Vector3.ProjectOnPlane(movementCube.transform.up, Vector3.up);
        // rbody.velocity = movementVector;
-		rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.x * -1);
-		rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.y * -1);
-	    rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.z * -1);
+		rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.x);
+		rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.y);
+	    rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.z);
     }
 
     // Converts the gyroscope's coordinates to unity's coordinates.
     private static Quaternion GyroToUnity(Quaternion q)
     {
-        return new Quaternion(q.x, q.y, -q.z, -q.w);
+        return new Quaternion(q.x, q.z, q.y, -q.w);
     }
 }
