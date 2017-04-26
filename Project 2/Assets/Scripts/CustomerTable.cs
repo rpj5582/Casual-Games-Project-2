@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Table_Pathing : MonoBehaviour {
+public class CustomerTable : MonoBehaviour {
     //public const int seatCount = 4;
     const int seatCount = 4; //currently does not support more than 4-seat square tables
                              //may come back to that if needed
@@ -21,6 +21,7 @@ public class Table_Pathing : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		PathMap map = CustomerManager.GetPathMap ();
 
         seats = new List<PathNode>();	
 
@@ -31,6 +32,9 @@ public class Table_Pathing : MonoBehaviour {
 			go.transform.parent = transform;
 
 			spawn = Quaternion.AngleAxis(360.0f /seatCount,transform.up)*spawn;
+		//	spawn.
+
+			go.GetComponent<PathNode> ().parentNode = map.findNearest (spawn).gameObject;
 		}
 	}
 	

@@ -4,7 +4,33 @@ using UnityEngine;
 
 public class CustomerManager : MonoBehaviour {
 
-	List<List<CustomerAI>> customerGroups;
+	private static CustomerManager instance;
+	public static CustomerManager Instance
+	{
+		get { 
+			if (instance == null) {
+				instance = new CustomerManager ();
+			}
+			return instance; 
+		}
+	}
+
+	private PathMap map;
+	public static PathMap Map{
+		get{
+			if (Instance.map == null) {
+				//Instance.map = gameObject.AddComponent<PathMap> ();
+				Instance.map = new PathMap ();
+				Instance.map.FindAllTables ();
+				Instance.map.FindAllNodes ();
+				Instance.map.AutoGenerateOrigin ();
+			}
+			return Instance.map;
+		}
+	}
+
+
+	private List<List<CustomerAI>> customerGroups;
 
 	// Use this for initialization
 	void Start () {
@@ -24,5 +50,9 @@ public class CustomerManager : MonoBehaviour {
 		//leave the way they came
 
 
+	}
+
+	public static PathMap GetPathMap(){
+		return Map;
 	}
 }
