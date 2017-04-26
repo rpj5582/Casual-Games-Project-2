@@ -9,7 +9,7 @@ public class GyroMovement : MonoBehaviour
     
     private Quaternion initialRotation;
     private Quaternion initialInverseGyroRotation;
-
+	private int torque = 5;
     private GameObject movementCube;
 
     private Vector3 movementVector = Vector3.zero;
@@ -37,8 +37,11 @@ public class GyroMovement : MonoBehaviour
         Quaternion offsetRotation = initialInverseGyroRotation * GyroToUnity(Input.gyro.attitude);
         movementCube.transform.rotation = initialRotation * offsetRotation;
 
-        movementVector = Vector3.ProjectOnPlane(movementCube.transform.up, Vector3.up);
-        rbody.velocity = movementVector;
+    //    movementVector = Vector3.ProjectOnPlane(movementCube.transform.up, Vector3.up);
+       // rbody.velocity = movementVector;
+		rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.x * -1);
+		rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.y * -1);
+	    rbody.AddTorque(movementCube.transform.up * torque * movementCube.transform.forward.z * -1);
     }
 
     // Converts the gyroscope's coordinates to unity's coordinates.
