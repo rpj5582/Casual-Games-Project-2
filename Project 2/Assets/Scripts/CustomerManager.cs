@@ -7,20 +7,21 @@ public class CustomerManager : MonoBehaviour {
 	private static CustomerManager instance;
 	public static CustomerManager Instance
 	{
-		get { 
+		get { /*
 			if (instance == null) {
 				instance = new CustomerManager ();
-			}
+			}*/
 			return instance; 
 		}
 	}
 
 	private PathMap map;
-	public static PathMap Map{
+	public PathMap Map{
 		get{
+			
 			if (Instance.map == null) {
-				//Instance.map = gameObject.AddComponent<PathMap> ();
-				Instance.map = new PathMap ();
+				Instance.map = gameObject.AddComponent<PathMap> ();
+				//Instance.map = new PathMap ();
 				Instance.map.FindAllTables ();
 				Instance.map.FindAllNodes ();
 				Instance.map.AutoGenerateOrigin ();
@@ -32,9 +33,15 @@ public class CustomerManager : MonoBehaviour {
 
 	private List<List<CustomerAI>> customerGroups;
 
+	void Awake(){
+
+		if (instance == null) {
+			instance = this;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
-		
 	}
 	
 	// Update is called once per frame
@@ -53,6 +60,6 @@ public class CustomerManager : MonoBehaviour {
 	}
 
 	public static PathMap GetPathMap(){
-		return Map;
+		return Instance.Map;
 	}
 }

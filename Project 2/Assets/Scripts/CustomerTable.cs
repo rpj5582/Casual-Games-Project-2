@@ -22,6 +22,7 @@ public class CustomerTable : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		PathMap map = CustomerManager.GetPathMap ();
+		nearest = map.findNearest(transform.position);
 
         seats = new List<PathNode>();	
 
@@ -30,11 +31,12 @@ public class CustomerTable : MonoBehaviour {
 		for (int i = 0; i < seatCount; i++) {
 			GameObject go = Instantiate(seat, transform.position + spawn, transform.rotation) as GameObject;
 			go.transform.parent = transform;
+			//go.GetComponent<PathNode> ().parentNode = map.findNearest (go.transform.position).gameObject;
+			go.GetComponent<PathNode> ().parentNode = nearest.gameObject;
 
 			spawn = Quaternion.AngleAxis(360.0f /seatCount,transform.up)*spawn;
 		//	spawn.
 
-			go.GetComponent<PathNode> ().parentNode = map.findNearest (spawn).gameObject;
 		}
 	}
 	
