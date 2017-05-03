@@ -28,49 +28,7 @@ public class CustomerAI : MonoBehaviour {
 		
         if(state == CustomerState.WALKING)
         {
-			
-            //seek next
-			Vector3 distance = next.transform.position - transform.position;
-            //if reached next
-			if (distance.magnitude < nodeRange) {
-				pathProgress++;
-				next = path [pathProgress];
-			} 
-			//if haven't reached, move closer
-			else {
-				//move along one axis at a time
-				Vector3 pos = transform.position;
-
-				//favor axis with the most distnace needed to be covered?
-				if (xFocused) {
-					//stub for movement
-					//pos.x += Mathf.Max (maxSpeed, distance.x);
-
-					float deltaX = maxSpeed; //attempt to move at maximum speed
-					//limit speed if goal is not that far away
-					if (maxSpeed > Mathf.Abs (distance.x)) {
-						deltaX = distance.x;
-					}
-					//move in negative direction if node is in negative direction
-					else if (distance.x < 0) {
-						deltaX *= -1;
-					}
-
-					pos.x += deltaX;
-
-
-					if (next.transform.position.x - transform.position.x < nodeRange) { //has covered all distance necessary on this axis
-						xFocused = false;
-					}
-				} else { //zFocused
-					pos.z += Mathf.Max(maxSpeed,distance.z);
-				}
-
-				transform.position = pos;
-
-
-				//transform.position += distance.normalized * maxSpeed;
-			}
+			move_NoPhysics ();
 		}
 	}
 
@@ -90,9 +48,67 @@ public class CustomerAI : MonoBehaviour {
 		FollowPath(path);
 	}
 
+	//moves this object's coordinates directly without any use of physics
+	//strategy mainly used for debugging, but if physics are not deemed necessary may continue using
+	private void move_NoPhysics(){
+
+		//seek next
+		Vector3 distance = next.transform.position - transform.position;
+
+		//if reached next
+		if (distance.magnitude < nodeRange) {
+			pathProgress++;
+			next = path [pathProgress];
+
+			distance = next.transform.position - transform.position;
+			// focus on the axis with more ground to cover
+			xFocused = (distance.x * distance.x > distance.z * distance.z);
+		} 
+
+		//if haven't reached, move closer
+		else {
+			//move along one axis at a time
+			Vector3 pos = transform.position;
+
+			//favor axis with the most distnace needed to be covered?
+			if (xFocused) {
+
+				pos.x += stepDistance(distance.x); //get distance traveleable in one step
+
+				if (next.transform.position.x - pos.x < nodeRange) { //has covered all distance necessary on this axis
+					xFocused = false;
+				}
+			} else { //zFocused
+				pos.x += stepDistance(distance.z); //get distance traveleable in one step
+
+				if (next.transform.position.z - pos.z < nodeRange) { //has covered all distance necessary on this axis
+					xFocused = true;
+				}
+			}
+
+			transform.position = pos;
+		}
+	}
+
 	//private helper, returns the distance unit should move
+	//add return value directly to coordinates
 	//assumes moves along one axis
 	private float stepDistance(float distance){
+		float toReturn = 1.0f;
+		//get the smaller of two: distance or maxspeed
+		if (distance * distance > maxSpeed * maxSpeed) {
+			toReturn = maxSpeed;
+		} else {
+			toReturn = distance;
+		}
 
+		//if distance was in negative direction, should return negative
+		if (distance < 0) {
+			toReturn *= -1;
+		}
+		//apply time scaling
+		toReturn *= Time.deltaTime;
+
+		return toReturn;
 	}
 }

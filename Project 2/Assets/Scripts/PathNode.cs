@@ -7,6 +7,8 @@ public class PathNode : MonoBehaviour {
 	public GameObject parentNode = null;
     private List<GameObject> subNodes = new List<GameObject>();
 
+	public int layer = 0; //determines how many connections this node is from origin
+
 	// Use this for initialization
 	void Start () {
 		//double check our parent knows we are child
@@ -32,7 +34,19 @@ public class PathNode : MonoBehaviour {
 		
 		//debug code
 		if (parentNode != null) {
-			Debug.DrawLine (transform.position, parentNode.transform.position, Color.red);
+			//Debug.DrawLine (transform.position, parentNode.transform.position, Color.red);
+
+			Vector3 corner= transform.position;
+
+			Vector3 dist = parentNode.transform.position - transform.position;
+			if (dist.x * dist.x > dist.z * dist.z) {
+				corner.z += dist.z;
+			} else {
+				Debug.Log ("Z");
+				corner.x += dist.x;
+			}
+			Debug.DrawLine (transform.position, corner, Color.red);
+			Debug.DrawLine (corner, parentNode.transform.position, Color.red);
 		}
 		/*
 		for(int i = 0; i < subNodes.Count; i++)
