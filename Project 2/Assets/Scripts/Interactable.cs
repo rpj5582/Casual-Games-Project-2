@@ -4,31 +4,41 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-	public GameObject item;
-
-	void Start()
-	{
-		
-	}
+	public Item item;
+	public Transform itemPosition;
 
 	void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.tag == "Player")
 		{
+			Inventory playerInventory = collision.gameObject.GetComponent<Inventory> ();
+
 			if (item)
 			{
-				item.transform.SetParent (collision.transform);
-				item = null;
+				PickUpItem (playerInventory, collision.transform);
 			}
 			else
 			{
-				Inventory playerInventory = collision.gameObject.GetComponent<Inventory> ();
-				if (playerInventory)
-				{
-					item = playerInventory.item;
-					item.transform.SetParent (transform);
-				}
+				PutDownItem (playerInventory);
 			}
 		}
+	}
+
+	private void PickUpItem(Inventory inventory, Transform otherTransform)
+	{
+		inventory.item = item;
+		item.transform.SetParent (otherTransform);
+		item = null;
+
+		Debug.Log ("Picked up item");
+	}
+
+	private void PutDownItem(Inventory inventory)
+	{
+		item = inventory.item;
+		item.transform.SetParent (itemPosition);
+		item.ResetTransform ();
+
+		Debug.Log ("Put down item");
 	}
 }
