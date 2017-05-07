@@ -11,34 +11,32 @@ public class Interactable : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Player")
 		{
-			Inventory playerInventory = collision.gameObject.GetComponent<Inventory> ();
+			PlayerInventory playerInventory = collision.gameObject.GetComponent<PlayerInventory> ();
 
-			if (item)
+			if (item && !playerInventory.item)
 			{
-				PickUpItem (playerInventory, collision.transform);
+				PickUpItem (playerInventory);
 			}
-			else
+			else if(!item && playerInventory.item)
 			{
 				PutDownItem (playerInventory);
 			}
 		}
 	}
 
-	private void PickUpItem(Inventory inventory, Transform otherTransform)
+	private void PickUpItem(PlayerInventory inventory)
 	{
 		inventory.item = item;
-		item.transform.SetParent (otherTransform);
+		item.transform.SetParent (inventory.HoldPoint);
+        item.ResetTransform();
 		item = null;
-
-		Debug.Log ("Picked up item");
 	}
 
-	private void PutDownItem(Inventory inventory)
+	private void PutDownItem(PlayerInventory inventory)
 	{
 		item = inventory.item;
 		item.transform.SetParent (itemPosition);
 		item.ResetTransform ();
-
-		Debug.Log ("Put down item");
+        inventory.item = null;
 	}
 }

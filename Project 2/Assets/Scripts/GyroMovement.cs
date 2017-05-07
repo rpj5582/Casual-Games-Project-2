@@ -5,29 +5,45 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class GyroMovement : MonoBehaviour
 {
-    private Rigidbody rbody;
+    public bool USE_GYRO = true;
 
-    private Vector3 movementVector = Vector3.zero;
+    private Rigidbody rbody;
 
 	public float movementSpeed = 5f;
 	public float sqForceDeadzone = 0.5f;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         Input.gyro.enabled = true;
         rbody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
-		movementVector = Vector3.ProjectOnPlane (GyroToUnity(Input.gyro.gravity), Vector3.up);
-		Vector3 force = movementVector * movementSpeed;
-		if (force.sqrMagnitude > sqForceDeadzone)
-		{
-			rbody.AddForce (force);
-		}
+        if(!USE_GYRO)
+        {
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+
+            Vector3 movementVector = new Vector3(h, 0, v);
+            Vector3 force = movementVector * movementSpeed;
+            rbody.AddForce(force);
+        }
+    }
+
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
+        if(USE_GYRO)
+        {
+            Vector3 movementVector = Vector3.ProjectOnPlane(GyroToUnity(Input.gyro.gravity), Vector3.up);
+            Vector3 force = movementVector * movementSpeed;
+            if (force.sqrMagnitude > sqForceDeadzone)
+            {
+                rbody.AddForce(force);
+            }
+        }
     }
 
     // Converts the gyroscope's coordinates to unity's coordinates.
