@@ -7,8 +7,8 @@ public enum CustomerState
     IDLE, WALKING, DECIDING, WAITING, EATING, LEAVING
 }
 public class CustomerAI : MonoBehaviour {
-    static float maxSpeed = 1.0f;
-	private const float nodeRange = 0.1f; //distance a unit must be from a node in order to update path
+    static float maxSpeed = 3.0f;
+	private const float nodeRange = 0.5f; //distance a unit must be from a node in order to update path
 
     private CustomerState state = CustomerState.IDLE;
     private List<PathNode> path;
@@ -16,7 +16,7 @@ public class CustomerAI : MonoBehaviour {
     private PathNode next;
     private string order = "";
 
-	private bool xFocused = true; //unit is moving along x-axis and not z
+	public bool xFocused = true; //unit is moving along x-axis and not z
 
 	// Use this for initialization
 	void Start () {
@@ -54,6 +54,7 @@ public class CustomerAI : MonoBehaviour {
 
 		//seek next
 		Vector3 distance = next.transform.position - transform.position;
+        distance.y = 0;
 
 		//if reached next
 		if (distance.magnitude < nodeRange) {
@@ -79,7 +80,7 @@ public class CustomerAI : MonoBehaviour {
 					xFocused = false;
 				}
 			} else { //zFocused
-				pos.x += stepDistance(distance.z); //get distance traveleable in one step
+				pos.z += stepDistance(distance.z); //get distance traveleable in one step
 
 				if (next.transform.position.z - pos.z < nodeRange) { //has covered all distance necessary on this axis
 					xFocused = true;

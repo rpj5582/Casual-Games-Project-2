@@ -66,4 +66,31 @@ public class PathMap : MonoBehaviour {
 			}
 		}
 	}
+
+    //returns list of pathnodes to given node
+    public List<PathNode> GetPath(PathNode node)
+    {
+        List<PathNode> path = new List<PathNode>();
+        path.Add(node);
+
+        //insert all node's ancestors in list before it
+        PathNode n = node;
+        while (n.parentNode != null)
+        {
+            n = n.parentNode;
+            path.Insert(0, n);
+        }
+
+        return path;
+    }
+
+    public CustomerTable GetTable(int index)
+    {
+        if (index < 0 || index >= tables.Count)
+        {
+            Debug.LogError("Invalid table index");
+            return null;
+        }
+        return tables[index];
+    }
 }

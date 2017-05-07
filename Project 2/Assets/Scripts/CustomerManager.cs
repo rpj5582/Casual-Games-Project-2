@@ -30,6 +30,8 @@ public class CustomerManager : MonoBehaviour {
 		}
 	}
 
+    public GameObject customerPref;
+
 
 	private List<List<CustomerAI>> customerGroups;
 
@@ -47,16 +49,17 @@ public class CustomerManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//spawn customers (in groups?)
-		//cluster around entrance and idle for a few seconds
-		//send on path to table
-		//enter deciding phase for a few seconds
-		//enter ordering phase
-		//wait for player input
-		//enter eating phase
-		//leave the way they came
+        //spawn customers (in groups?)
+        //cluster around entrance and idle for a few seconds
+        //send on path to table
+        //enter deciding phase for a few seconds
+        //enter ordering phase
+        //wait for player input
+        //enter eating phase
+        //leave the way they came
 
-
+        CustomerAI c = Instantiate(customerPref, transform).GetComponent<CustomerAI>();
+        c.FollowPath(map.GetPath(map.GetTable(1).GetSeat(1)));
 	}
 
 	public static PathMap GetPathMap(){

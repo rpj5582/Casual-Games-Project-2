@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PathNode : MonoBehaviour {
 
-	public GameObject parentNode = null;
+	public PathNode parentNode = null;
     private List<GameObject> subNodes = new List<GameObject>();
 
 	public int layer = 0; //determines how many connections this node is from origin
@@ -24,7 +24,7 @@ public class PathNode : MonoBehaviour {
 		{
 			PathNode child = subNodes [i].GetComponent<PathNode> ();
 			if (child.parentNode == null) {
-				child.parentNode = this.gameObject;
+				child.parentNode = this;
 			}
 		}
 	}
@@ -42,7 +42,7 @@ public class PathNode : MonoBehaviour {
 			if (dist.x * dist.x > dist.z * dist.z) {
 				corner.z += dist.z;
 			} else {
-				Debug.Log ("Z");
+				//Debug.Log ("Z");
 				corner.x += dist.x;
 			}
 			Debug.DrawLine (transform.position, corner, Color.red);

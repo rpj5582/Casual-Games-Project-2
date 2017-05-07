@@ -15,6 +15,8 @@ public class CustomerTable : MonoBehaviour {
 
     List<PathNode> path; //how to get from origin node to here, should end on [nearest]
 
+    List<CustomerAI> customerGroup;
+
 	bool occupied=false; //table is in use by customers
 
 	float tableRadius = 4.0f;
@@ -31,8 +33,10 @@ public class CustomerTable : MonoBehaviour {
 		for (int i = 0; i < seatCount; i++) {
 			GameObject go = Instantiate(seat, transform.position + spawn, transform.rotation) as GameObject;
 			go.transform.parent = transform;
-			//go.GetComponent<PathNode> ().parentNode = map.findNearest (go.transform.position).gameObject;
-			go.GetComponent<PathNode> ().parentNode = nearest.gameObject;
+            //go.GetComponent<PathNode> ().parentNode = map.findNearest (go.transform.position).gameObject;
+            PathNode pn = go.GetComponent<PathNode>();
+            pn.parentNode = nearest;
+            seats.Add(pn);
 
 			spawn = Quaternion.AngleAxis(360.0f /seatCount,transform.up)*spawn;
 		//	spawn.
@@ -44,4 +48,14 @@ public class CustomerTable : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public PathNode GetSeat(int index)
+    {
+        if(index < 0 || index >= seatCount)
+        {
+            Debug.LogError("Invalid seat index");
+            return null;
+        }
+        return seats[index];
+    }
 }
