@@ -93,4 +93,44 @@ public class PathMap : MonoBehaviour {
         }
         return tables[index];
     }
+
+	//get the number of occupied tables
+	public int OccupiedTables{
+		get { 
+			int occ = 0;
+			for(int i =0; i< tables.Count;i++){
+				if (tables [i].occupied)
+					occ++;
+			}
+			return occ; 
+		}
+	}
+	//get the number of open tables
+	public int OpenTables{
+		get { 
+			int op = 0;
+			for(int i =0; i< tables.Count;i++){
+				if (!tables [i].occupied)
+					op++;
+			}
+			return op; 
+		}
+	}
+
+	public CustomerTable GetRandomOpenTable(){
+		int r = Random.Range (0, OpenTables);
+
+
+		for (int i = 0; i < tables.Count; i++) {
+			if (!tables [i].occupied) {
+				r--;
+				if (r == 0) {
+					return tables[i];
+				}
+			}
+		}
+		//if unction returns null, there is an error in random number generation
+		Debug.LogError ("Error in random number generation");
+		return null; 
+	}
 }

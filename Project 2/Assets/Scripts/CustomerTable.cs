@@ -17,7 +17,7 @@ public class CustomerTable : MonoBehaviour {
 
     List<CustomerAI> customerGroup;
 
-	bool occupied=false; //table is in use by customers
+	public bool occupied=false; //table is in use by customers
 
 	float tableRadius = 4.0f;
 
