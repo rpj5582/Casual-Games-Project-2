@@ -13,6 +13,8 @@ public class PathMap : MonoBehaviour {
 			return instance; 
 		}
 	}*/
+	[SerializeField]
+	List<Transform> m_seats;
 
 	List<PathNode> nodes; //list of all pathnodes
 
@@ -25,7 +27,6 @@ public class PathMap : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
 	//returns the pathnode nearest to position

@@ -79,13 +79,15 @@ public class CustomerAI : MonoBehaviour {
 
 				pos.x += stepDistance(distance.x); //get distance traveleable in one step
 
-				if (next.transform.position.x - pos.x < nodeRange) { //has covered all distance necessary on this axis
+				float toGo = (next.transform.position.x - pos.x);
+				if (toGo*toGo < nodeRange*nodeRange) { //has covered all distance necessary on this axis
 					xFocused = false;
 				}
 			} else { //zFocused
 				pos.z += stepDistance(distance.z); //get distance traveleable in one step
 
-				if (next.transform.position.z - pos.z < nodeRange) { //has covered all distance necessary on this axis
+				float toGo = (next.transform.position.z - pos.z);
+				if (toGo*toGo < nodeRange*nodeRange) { //has covered all distance necessary on this axis
 					xFocused = true;
 				}
 			}
@@ -98,9 +100,7 @@ public class CustomerAI : MonoBehaviour {
 	//add return value directly to coordinates
 	//assumes moves along one axis
 	private float stepDistance(float distance) {
-		float toReturn = 1.0f;
-
-		//float tDist = distance * Time.deltaTime;
+		
 		float tSpd = maxSpeed * Time.deltaTime;
 		if (distance*distance > tSpd * tSpd) {
 			if (distance < 0) {
@@ -108,21 +108,7 @@ public class CustomerAI : MonoBehaviour {
 			}
 			return tSpd;
 		}
-		return distance;
-		/*
-		//get the smaller of two: distance or maxspeed
-		if (distance * distance > maxSpeed * maxSpeed) {
-			toReturn = maxSpeed;
-			//if distance was in negative direction, should return negative
-			if (distance < 0) {
-				toReturn *= -1;
-			}
 
-			//apply time scaling
-			//"arrive" in 1/4 of a second
-			return toReturn * Time.deltaTime;
-		} 
-			
-		return distance;*/
+		return distance;
 	}
 }

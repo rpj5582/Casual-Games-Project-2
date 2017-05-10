@@ -22,7 +22,7 @@ public class CustomerTable : MonoBehaviour {
 	float tableRadius = 4.0f;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		PathMap map = CustomerManager.GetPathMap ();
 		nearest = map.findNearest(transform.position);
 

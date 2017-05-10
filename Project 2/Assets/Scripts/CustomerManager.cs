@@ -32,11 +32,14 @@ public class CustomerManager : MonoBehaviour {
 
     public GameObject customerPref;
 
+	[SerializeField]
+	List<CustomerAI> m_customers;
 
 	private List<List<CustomerAI>> customerGroups;
 
 	void Awake(){
 
+		customerGroups = new List<List<CustomerAI>> ();
 		if (instance == null) {
 			instance = this;
 		}
@@ -58,11 +61,25 @@ public class CustomerManager : MonoBehaviour {
         //enter eating phase
         //leave the way they came
 
-        CustomerAI c = Instantiate(customerPref, transform).GetComponent<CustomerAI>();
-        c.FollowPath(map.GetPath(map.GetTable(1).GetSeat(1)));
+		/*
+		if (customerGroups.Count == 0) {
+			//Vector3 spawnPos = new Vector3(transform.position.x, 0, transform.position.y);
+			CustomerAI c = Instantiate (customerPref, transform).GetComponent<CustomerAI> ();
+			c.FollowPath (map.GetPath (map.GetTable (1).GetSeat (3)));
+
+			customerGroups.Add (new List<CustomerAI> ());
+			customerGroups [0].Add (c);
+		}*/
 	}
 
 	public static PathMap GetPathMap(){
 		return Instance.Map;
+	}
+	public void moveCustomer(int customerId, int chairId){
+		m_customers [customerId].FollowPath (map.GetPath(map.GetTable (1).GetSeat (chairId)));
+	}
+	public static void MoveCustomer(int customerId, int chairId){
+		if(instance != null)
+			instance.moveCustomer (customerId,chairId);
 	}
 }
