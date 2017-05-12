@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EntityLibrary : MonoBehaviour {
     static protected EntityLibrary INSTANCE;
-    List<MonoBehaviour> 
+    [SerializeField]
+    List<GameObject> 
         m_players,
         m_customers,
         m_others;
@@ -14,25 +15,25 @@ public class EntityLibrary : MonoBehaviour {
         INSTANCE = this;
     }
 
-    MonoBehaviour getItemAt(List<MonoBehaviour> list, int n)
+    GameObject getItemAt(List<GameObject> list, int n)
     {
         if (n < 0 || n >= list.Count)
             return null;
         return list[n];
     }
-    MonoBehaviour getPlayer(int n)
+    GameObject getPlayer(int n)
     {
         return getItemAt(m_players, n);
     }
-    MonoBehaviour getCustomer(int n)
+    GameObject getCustomer(int n)
     {
         return getItemAt(m_customers, n);
     }
-    MonoBehaviour getOther(int n)
+    GameObject getOther(int n)
     {
         return getItemAt(m_others, n);
     }
-    MonoBehaviour getGlobal(int n)
+    GameObject getGlobal(int n)
     {
         var player = getPlayer(n );
         if (player != null) return player;
@@ -42,23 +43,23 @@ public class EntityLibrary : MonoBehaviour {
         if (other != null) return other;
         return null;
     }
-    public static MonoBehaviour GET_PLAYER(int n)
+    public static GameObject GET_PLAYER(int n)
     {
         if (INSTANCE == null) return null;
         return INSTANCE.getPlayer(n);
     }
 
-    public static MonoBehaviour GET_CUSTOMER(int n)
+    public static GameObject GET_CUSTOMER(int n)
     {
         if (INSTANCE == null) return null;
         return INSTANCE.getCustomer(n);
     }
-    public static MonoBehaviour GET_OTHER(int n)
+    public static GameObject GET_OTHER(int n)
     {
         if (INSTANCE == null) return null;
         return INSTANCE.getOther(n);
     }
-    public static MonoBehaviour GET_GLOBAL(int n)
+    public static GameObject GET_GLOBAL(int n)
     {
         if (INSTANCE == null) return null;
         return INSTANCE.getGlobal(n);
