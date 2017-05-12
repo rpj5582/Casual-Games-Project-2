@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameEvents : MonoBehaviour {
-    protected static GameEvents Instance;
+    protected static GameEvents INSTANCE;
 
     public delegate void DEL_PLAYER_ASSIGNED(int playerId);
 	public delegate void DEL_MY_PLAYER_MOVED(int playerId, Vector3 position, float timeTaken);
@@ -23,9 +23,9 @@ public class GameEvents : MonoBehaviour {
 
     void Awake()
     {
-		if (Instance == null)
+		if (INSTANCE == null)
 		{
-			Instance = this;
+			INSTANCE = this;
 		}
     }
 
@@ -97,16 +97,16 @@ public class GameEvents : MonoBehaviour {
 
     public static void MY_PLAYER_ASSIGNED(int playerId)
     {
-        if (Instance == null) return;
-        Instance.mePlayerAssigned(playerId);
+        if (INSTANCE == null) return;
+        INSTANCE.mePlayerAssigned(playerId);
     }
 
     //Tells the server to move the player
     public static void MY_PLAYER_MOVED(int playerId, Vector3 position, float timeTaken)
     {
 
-        if (Instance == null) return;
-        Instance.myPlayerMoved(playerId, position,timeTaken);
+        if (INSTANCE == null) return;
+        INSTANCE.myPlayerMoved(playerId, position,timeTaken);
     }
     
 
@@ -114,8 +114,8 @@ public class GameEvents : MonoBehaviour {
     public static void PLAYER_MOVED_INSTANT(int playerId, Vector3 position)
     {
        
-        if (Instance == null) return;
-        Instance.playeMoveInstant(playerId, position);
+        if (INSTANCE == null) return;
+        INSTANCE.playeMoveInstant(playerId, position);
 
     }
 
@@ -123,29 +123,29 @@ public class GameEvents : MonoBehaviour {
     public static void PLAYER_MOVED(int playerId, Vector3 position, float timeTaken)
     {
 
-        if (Instance == null) return;
-        Instance.playerMove(playerId, position, timeTaken);
+        if (INSTANCE == null) return;
+        INSTANCE.playerMove(playerId, position, timeTaken);
         
     }
 
     //Item A is moved onto top of entity B for some reason
     public static void ITEM_MOVE_TO(int itemId, int entityId)
     {
-        if (Instance == null) return;
-        Instance.itemMovedTo(itemId, entityId);
+        if (INSTANCE == null) return;
+        INSTANCE.itemMovedTo(itemId, entityId);
     }
 
     //customer C is moved to an entity; that entity could be a chair or bench or bathroom toilet. Don't care how the movement is handled
     public static void CUSTOMER_MOVED_TO(int customerId, int entityId)
     {
-        if (Instance == null) return;
-        Instance.customerMoved(customerId, entityId);
+        if (INSTANCE == null) return;
+        INSTANCE.customerMoved(customerId, entityId);
     }
 
     //Sets the state of the customer (ie. Satisfied, Unhappy, Angry, etc.)
     public static void CUSTOMER_STATE(int customerId, int state)
     {
-        if (Instance == null) return;
-        Instance.customerState(customerId, state);
+        if (INSTANCE == null) return;
+        INSTANCE.customerState(customerId, state);
     }
 }
