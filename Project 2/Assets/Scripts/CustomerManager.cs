@@ -10,7 +10,7 @@ public class CustomerManager : MonoBehaviour {
 		get { /*
 			if (instance == null) {
 				instance = new CustomerManager ();
-			}*/
+			}//*/
 			return instance; 
 		}
 	}
@@ -18,15 +18,7 @@ public class CustomerManager : MonoBehaviour {
 	private PathMap map;
 	public PathMap Map{
 		get{
-			
-			if (Instance.map == null) {
-				Instance.map = gameObject.AddComponent<PathMap> ();
-				//Instance.map = new PathMap ();
-				Instance.map.FindAllTables ();
-				Instance.map.FindAllNodes ();
-				Instance.map.AutoGenerateOrigin ();
-			}
-			return Instance.map;
+			return map;
 		}
 	}
 
@@ -39,10 +31,19 @@ public class CustomerManager : MonoBehaviour {
 
 	void Awake(){
 
-		customerGroups = new List<List<CustomerAI>> ();
+	//	customerGroups = new List<List<CustomerAI>> ();
+		map = GetComponent <PathMap>();
+
+		if (map == null) {
+			map = gameObject.AddComponent<PathMap> ();
+			//Instance.map = new PathMap ();
+
+		}
+
 		if (instance == null) {
 			instance = this;
 		}
+
 	}
 
 	// Use this for initialization
@@ -73,8 +74,13 @@ public class CustomerManager : MonoBehaviour {
 	}
 
 	public static PathMap GetPathMap(){
+
+		if (Instance == null) {
+			return null;
+		}
 		return Instance.Map;
 	}
+
 	public void moveCustomer(int customerId, int chairId){
 		m_customers [customerId].FollowPath (map.GetPath(map.GetTable (1).GetSeat (chairId)));
 	}

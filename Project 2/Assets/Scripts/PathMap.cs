@@ -21,6 +21,12 @@ public class PathMap : MonoBehaviour {
 	List<CustomerTable> tables;//list of all availble tables
 	//index 0 is origin node
 
+	void Awake(){
+		FindAllTables ();
+		FindAllNodes ();
+		AutoGenerateOrigin ();
+	}
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -94,6 +100,12 @@ public class PathMap : MonoBehaviour {
         }
         return tables[index];
     }
+
+	public PathNode GetSeat(int chairIndex){
+		if(chairIndex < 0 || chairIndex >= m_seats.Count){ return null; }
+
+		return m_seats [chairIndex].gameObject.GetComponent<PathNode>();
+	}
 
 	//get the number of occupied tables
 	public int OccupiedTables{
