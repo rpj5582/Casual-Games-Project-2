@@ -93,6 +93,6 @@ public class CustomerAI : MonoBehaviour {
 	//private helper, returns the distance unit should move
 	//assumes moves along one axis
 	private float stepDistance(float distance){
-
+		return -1;
 	}
 }
