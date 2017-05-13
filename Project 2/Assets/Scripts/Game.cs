@@ -8,6 +8,7 @@ public class Game : MonoBehaviour {
 		CustomerManager.MoveCustomer (0, 0);
 		CustomerManager.MoveCustomer (1, 1);
 		CustomerManager.MoveCustomer (2, 2);
-
-	}
+        CustomerManager.MoveCustomer (3, 3);
+        
+    }
 }
