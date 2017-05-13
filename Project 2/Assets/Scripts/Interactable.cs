@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Interactable : MonoBehaviour
+public class Interactable : NetworkBehaviour
 {
 	public Item item;
 	public Transform itemPosition;
@@ -11,6 +12,11 @@ public class Interactable : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Player")
 		{
+            Interactable myInteractable = this;
+            Interactable otherInteractable = collision.gameObject.GetComponent<Interactable>();
+
+//            RpcSwapItems(collision.gameObject, myInteractable.item, otherInteractable.item);
+
 			PlayerInventory playerInventory = collision.gameObject.GetComponent<PlayerInventory> ();
 
 			if (item && !playerInventory.item)
@@ -23,6 +29,25 @@ public class Interactable : MonoBehaviour
 			}
 		}
 	}
+
+//    [ClientRpc]
+//    private void RpcSwapItems(GameObject other, Item myItem, Item otherItem)
+//    {
+//        item = otherItem;
+//        if(item)
+//        {
+//            item.transform.SetParent(itemPosition);
+//            item.ResetTransform();
+//        }
+//
+//        Interactable otherInteractable = other.GetComponent<Interactable>();
+//        otherInteractable.item = myItem;
+//        if(otherInteractable.item)
+//        {
+//            otherInteractable.item.transform.SetParent(otherInteractable.itemPosition);
+//            otherInteractable.item.ResetTransform();
+//        }
+//    }
 
 	private void PickUpItem(PlayerInventory inventory)
 	{
