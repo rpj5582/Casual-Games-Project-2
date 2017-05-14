@@ -164,21 +164,24 @@ public class CustomerAI : MonoBehaviour {
         transform.position = pos;
     }
 
-	//private helper, returns the distance unit should move
-	//add return value directly to coordinates
-	//assumes moves along one axis
-	private float stepDistance(float distance) {
-		
-		float tSpd = maxSpeed * Time.deltaTime;
-		if (distance*distance > tSpd * tSpd) {
-			if (distance < 0) {
-				tSpd *= -1;
-			}
-			return tSpd;
-		}
+    //private helper, returns the distance unit should move
+    //add return value directly to coordinates
+    //assumes moves along one axis
+    private float stepDistance(float distance)
+    {
 
-		return distance;
-	}
+        float tSpd = maxSpeed * Time.deltaTime;
+        if (distance * distance > tSpd * tSpd)
+        {
+            if (distance < 0)
+            {
+                tSpd *= -1;
+            }
+            return tSpd;
+        }
+
+        return distance;
+    }
 
     //stalls movement for one frame, used by follow when it needs to catch up
     public void stall()

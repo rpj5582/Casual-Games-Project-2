@@ -48,7 +48,6 @@ public class FollowTarget : MonoBehaviour {
         {
             if (ai != null)
             {
-               // Debug.Log("stalling");
                 ai.stall();
             }
         }
