@@ -13,11 +13,21 @@ public class PathMap : MonoBehaviour {
 			return instance; 
 		}
 	}*/
+	[SerializeField]
+	List<Transform> m_seats;
 
 	List<PathNode> nodes; //list of all pathnodes
 
 	List<CustomerTable> tables;//list of all availble tables
+
+    public Transform storage; //location to place customers when not in use
 	//index 0 is origin node
+
+	void Awake(){
+		FindAllTables ();
+		FindAllNodes ();
+		AutoGenerateOrigin ();
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +35,6 @@ public class PathMap : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
 	//returns the pathnode nearest to position
@@ -65,5 +74,84 @@ public class PathMap : MonoBehaviour {
 				nodes.Insert (0, origin);
 			}
 		}
+	}
+
+    //returns list of pathnodes to given node
+    public List<PathNode> GetPath(PathNode node)
+    {
+        List<PathNode> path = new List<PathNode>();
+        path.Add(node);
+
+        //insert all node's ancestors in list before it
+        PathNode n = node;
+        while (n.parentNode != null)
+        {
+            n = n.parentNode;
+            path.Insert(0, n);
+        }
+
+        return path;
+    }
+
+    //returns node at index 0, where paths should start
+    public PathNode GetOrigin()
+    {
+        return nodes[0];
+    }
+
+    public CustomerTable GetTable(int index)
+    {
+        if (index < 0 || index >= tables.Count)
+        {
+            Debug.LogError("Invalid table index");
+            return null;
+        }
+        return tables[index];
+    }
+
+	public PathNode GetSeat(int chairIndex){
+		if(chairIndex < 0 || chairIndex >= m_seats.Count){ return null; }
+
+		return m_seats [chairIndex].gameObject.GetComponent<PathNode>();
+	}
+
+	//get the number of occupied tables
+	public int OccupiedTables{
+		get { 
+			int occ = 0;
+			for(int i =0; i< tables.Count;i++){
+				if (tables [i].occupied)
+					occ++;
+			}
+			return occ; 
+		}
+	}
+	//get the number of open tables
+	public int OpenTables{
+		get { 
+			int op = 0;
+			for(int i =0; i< tables.Count;i++){
+				if (!tables [i].occupied)
+					op++;
+			}
+			return op; 
+		}
+	}
+
+	public CustomerTable GetRandomOpenTable(){
+		int r = Random.Range (0, OpenTables);
+
+
+		for (int i = 0; i < tables.Count; i++) {
+			if (!tables [i].occupied) {
+				r--;
+				if (r == 0) {
+					return tables[i];
+				}
+			}
+		}
+		//if unction returns null, there is an error in random number generation
+		Debug.LogError ("Error in random number generation");
+		return null; 
 	}
 }

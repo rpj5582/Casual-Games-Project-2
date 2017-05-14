@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PathNode : MonoBehaviour {
 
-	public GameObject parentNode = null;
+	public PathNode parentNode = null;
     private List<GameObject> subNodes = new List<GameObject>();
+
+	public int layer = 0; //determines how many connections this node is from origin
 
 	// Use this for initialization
 	void Start () {
@@ -22,7 +24,7 @@ public class PathNode : MonoBehaviour {
 		{
 			PathNode child = subNodes [i].GetComponent<PathNode> ();
 			if (child.parentNode == null) {
-				child.parentNode = this.gameObject;
+				child.parentNode = this;
 			}
 		}
 	}
@@ -32,16 +34,17 @@ public class PathNode : MonoBehaviour {
 		
 		//debug code
 		if (parentNode != null) {
-			Debug.DrawLine (transform.position, parentNode.transform.position, Color.red);
-		}
-		/*
-		for(int i = 0; i < subNodes.Count; i++)
-        {
-            Debug.DrawLine(transform.position, subNodes[i].transform.position, Color.red);
-			if (subNodes [i].GetComponent<PathNode> ().parentNode == null) {
-				subNodes [i].GetComponent<PathNode> ().parentNode = this.gameObject;
+			Vector3 corner= transform.position;
+
+			Vector3 dist = parentNode.transform.position - transform.position;
+			if (dist.x * dist.x > dist.z * dist.z) {
+				corner.z += dist.z;
+			} else {
+				corner.x += dist.x;
 			}
-        }*/
+			Debug.DrawLine (transform.position, corner, Color.red);
+			Debug.DrawLine (corner, parentNode.transform.position, Color.red);
+		}
 	}
 
 	public void AddSubNode(PathNode node){
