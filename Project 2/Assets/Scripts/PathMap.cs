@@ -19,6 +19,8 @@ public class PathMap : MonoBehaviour {
 	List<PathNode> nodes; //list of all pathnodes
 
 	List<CustomerTable> tables;//list of all availble tables
+
+    public Transform storage; //location to place customers when not in use
 	//index 0 is origin node
 
 	void Awake(){
@@ -89,6 +91,12 @@ public class PathMap : MonoBehaviour {
         }
 
         return path;
+    }
+
+    //returns node at index 0, where paths should start
+    public PathNode GetOrigin()
+    {
+        return nodes[0];
     }
 
     public CustomerTable GetTable(int index)

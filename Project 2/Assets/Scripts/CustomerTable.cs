@@ -27,7 +27,7 @@ public class CustomerTable : MonoBehaviour {
 		nearest = map.findNearest(transform.position);
 
         seats = new List<PathNode>();	
-
+        /*
 		//Vector3 up = transform.up;
 		Vector3 spawn = transform.forward * tableRadius;
 		for (int i = 0; i < seatCount; i++) {
@@ -41,7 +41,7 @@ public class CustomerTable : MonoBehaviour {
 			spawn = Quaternion.AngleAxis(360.0f /seatCount,transform.up)*spawn;
 		//	spawn.
 
-		}
+		}*/
 	}
 	
 	// Update is called once per frame

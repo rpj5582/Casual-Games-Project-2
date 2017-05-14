@@ -11,14 +11,23 @@ public class FollowTarget : MonoBehaviour {
 	Rigidbody m_body;
     
     public float minDistance = 0.1f;
-    public float maxSpeed = 6.0f;
+    public float maxSpeed = 10.0f;
+
+    public CustomerAI ai;
 
 	// Use this for initialization
-	void Start () {
-	}
+	void Awake () {
+        ai = m_target.GetComponent<CustomerAI>();
+        if(ai != null)
+        {
+            ai.SetFollower(gameObject);
+            gameObject.SetActive (false);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        
 
         Vector3 distance = m_target.position - m_body.position;
 
@@ -27,10 +36,21 @@ public class FollowTarget : MonoBehaviour {
         {
             m_body.position = m_target.position;
             m_body.velocity = Vector3.zero;
+            return;
         }
         else //move as fast as possible in the desired direction
         {
             m_body.velocity = distance.normalized * maxSpeed;
+        }
+
+        //stall the ai if it's getting too far ahead
+        if(distance.magnitude > 5.0f)
+        {
+            if (ai != null)
+            {
+               // Debug.Log("stalling");
+                ai.stall();
+            }
         }
     }
 }

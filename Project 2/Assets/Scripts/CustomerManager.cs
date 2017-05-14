@@ -7,10 +7,7 @@ public class CustomerManager : MonoBehaviour {
 	private static CustomerManager instance;
 	public static CustomerManager Instance
 	{
-		get { /*
-			if (instance == null) {
-				instance = new CustomerManager ();
-			}//*/
+		get { 
 			return instance; 
 		}
 	}
@@ -81,11 +78,24 @@ public class CustomerManager : MonoBehaviour {
 		return Instance.Map;
 	}
 
+    //tell customer to enter resturaunt and move to designated seat
 	public void moveCustomer(int customerId, int chairId){
-		m_customers [customerId].FollowPath (map.GetPath(map.GetTable (1).GetSeat (chairId)));
+        m_customers[customerId].gameObject.SetActive(true);
+		m_customers [customerId].FollowPath (map.GetPath(map.GetSeat (chairId)));
 	}
 	public static void MoveCustomer(int customerId, int chairId){
 		if(instance != null)
 			instance.moveCustomer (customerId,chairId);
 	}
+
+    //tell customer to leave resturaunt
+    public void removeCustomer(int customerId)
+    {
+        m_customers[customerId].Leave();
+    }
+    public static void RemoveCustomer(int customerId)
+    {
+        if (instance != null)
+            instance.removeCustomer(customerId);
+    }
 }

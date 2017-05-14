@@ -20,6 +20,10 @@ public class CustomerAI : MonoBehaviour {
     private List<CustomerAI> others;
     private float seperationDistance=1.0f;
 
+    private Vector3 prevPos;
+
+    private GameObject follower = null;
+
 	// Use this for initialization
 	void Start () {
         //store a referance to all customers who are not this, for collision checking
@@ -34,11 +38,14 @@ public class CustomerAI : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
-		
-        if(state == CustomerState.WALKING) {
+	void Update ()
+    {
+        prevPos = transform.position;
+
+        if (state == CustomerState.WALKING || state == CustomerState.LEAVING) {
 			move_NoPhysics ();
 		}
+
 	}
 
     //tells customer to follow path to its end
@@ -48,13 +55,20 @@ public class CustomerAI : MonoBehaviour {
 
         pathProgress = 0;
         next = path[pathProgress];
+
+        //if we have a follower object, activate it now
+        if (follower != null)
+        {
+            follower.SetActive(true);
+        }
     }
     
 	//tells customer to leave the way they came
 	public void Leave() {
 		path.Reverse ();
 		FollowPath(path);
-	}
+        state = CustomerState.LEAVING;
+    }
 
 	//moves this object's coordinates directly without any use of physics
 	//strategy mainly used for debugging, but if physics are not deemed necessary may continue using
@@ -69,7 +83,7 @@ public class CustomerAI : MonoBehaviour {
         //the minimum distance unit must be from a node to register it as reached
         //the final node has a much stricter minimum, (cutting corners is fine, but you need to end in your chair)
         float range = nodeRange;
-        if(pathProgress == path.Count-1){
+        if(pathProgress == path.Count-1 && state==CustomerState.WALKING){
             range = 0.1f;
         }
 
@@ -79,7 +93,16 @@ public class CustomerAI : MonoBehaviour {
             //move on to the next pathnode, or idle if there are no nodes left
 			pathProgress++;
 			if (pathProgress >= path.Count) {
-				state = CustomerState.IDLE;
+                if (state == CustomerState.LEAVING) //custoemr has left the building //no longer in use
+                {
+                    if (follower != null) //hide a follower object
+                    {
+                        follower.SetActive(false);
+                    }
+
+                    gameObject.SetActive(false);
+                }
+                state = CustomerState.IDLE;
                 return;
 			} else {
 				next = path [pathProgress];
@@ -88,12 +111,19 @@ public class CustomerAI : MonoBehaviour {
 
 				// focus on the axis with more ground to cover first
 				xFocused = (distance.x * distance.x > distance.z * distance.z);
+
+                if(state == CustomerState.LEAVING) //reverse axis priority when leaving (go out the way you came in)
+                {
+                    xFocused = !xFocused;
+                }
 			}
 		}
 
-        // check future position for a potential collision with another customer
+        // check for a potential collision with another customer
         foreach (CustomerAI other in others)
         {
+            if (!other.gameObject.activeSelf) { continue; } //skip inactive objects
+
             Vector3 dist = other.gameObject.transform.position - transform.position;
             dist.y = 0;
 
@@ -149,4 +179,15 @@ public class CustomerAI : MonoBehaviour {
 
 		return distance;
 	}
+
+    //stalls movement for one frame, used by follow when it needs to catch up
+    public void stall()
+    {
+        transform.position = prevPos;
+    }
+    //Follower object, mesh that smoothly follows AI object
+    public void SetFollower(GameObject f)
+    {
+        follower = f;
+    }
 }
