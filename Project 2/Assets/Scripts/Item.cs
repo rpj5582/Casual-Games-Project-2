@@ -1,10 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Item : MonoBehaviour {
+public class Item : NetworkBehaviour {
 
 	private Quaternion defaultRotation;
+
+    [SyncVar]
+    private int id = -1;
+    public int ID
+    {
+        get { return id; }
+        set
+        {
+            if(value > -1)
+                id = value;
+        }
+    }
 
 	private void Start ()
 	{

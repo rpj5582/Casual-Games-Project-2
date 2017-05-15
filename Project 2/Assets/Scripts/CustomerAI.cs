@@ -69,7 +69,7 @@ public class CustomerAI : MonoBehaviour {
 		FollowPath(path);
         state = CustomerState.LEAVING;
     }
-
+        
 	//moves this object's coordinates directly without any use of physics
 	//strategy mainly used for debugging, but if physics are not deemed necessary may continue using
 	private void move_NoPhysics() {
