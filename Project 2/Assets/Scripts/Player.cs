@@ -4,8 +4,20 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : NetworkBehaviour
+public class Player : NetworkBehaviour
 {
+    [SyncVar]
+    private int id = -1;
+    public int ID
+    {
+        get { return id; }
+        set
+        {
+            if(value > -1)
+                id = value;
+        }
+    }
+
     public bool DEBUG_USE_GYRO = true;
 
     private Rigidbody rbody;
