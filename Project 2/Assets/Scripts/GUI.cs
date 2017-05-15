@@ -39,6 +39,6 @@ public class GUI : MonoBehaviour
 
     public void Disconnect()
     {
-        networkManager.StopClient();
+        networkManager.StopHost();
     }
 }

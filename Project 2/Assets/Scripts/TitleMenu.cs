@@ -5,7 +5,12 @@ using UnityEngine.Networking;
 
 public class TitleMenu : MonoBehaviour
 {
-    public GameNetworkManager networkManager;
+    private GameNetworkManager networkManager;
+
+    private void Start()
+    {
+        networkManager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<GameNetworkManager>();
+    }
 
     public void StartHost()
     {

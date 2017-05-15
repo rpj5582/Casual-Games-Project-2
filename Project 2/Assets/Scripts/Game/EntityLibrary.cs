@@ -47,7 +47,8 @@ public class EntityLibrary : NetworkBehaviour {
 
     public static void SendRegisterPlayersRPC()
     {
-        INSTANCE.RpcRegisterPlayers();
+        if(INSTANCE)
+            INSTANCE.RpcRegisterPlayers();
     }
 
     [ClientRpc]
