@@ -18,11 +18,16 @@ public class CustomerAI : MonoBehaviour {
 	public bool xFocused = true; //unit is moving along x-axis and not z
 
     private List<CustomerAI> others;
-    private float seperationDistance=1.0f;
+    private float seperationDistance=0.25f;
 
     private Vector3 prevPos;
 
     private GameObject follower = null;
+
+    //satisfaction decreases over time when sitting at a table
+    private const float customerWaitTime = 30.0f;
+    private float satisfaction = customerWaitTime;
+    public bool satisfied = true; //false if the customer left due to time out
 
 	// Use this for initialization
 	void Start () {
@@ -46,7 +51,16 @@ public class CustomerAI : MonoBehaviour {
         if (state == CustomerState.WALKING || state == CustomerState.LEAVING) {
 			move_NoPhysics ();
 		}
+        if(state == CustomerState.IDLE)
+        {
+            satisfaction -= Time.deltaTime;
 
+            if(satisfaction <= 0)
+            {
+                satisfied = false;
+                Leave();
+            }
+        }
 	}
 
     //tells customer to follow path to its end
@@ -104,6 +118,7 @@ public class CustomerAI : MonoBehaviour {
                     gameObject.SetActive(false);
                 }
                 state = CustomerState.IDLE;
+                satisfaction = customerWaitTime;
                 return;
 			} else {
 				next = path [pathProgress];

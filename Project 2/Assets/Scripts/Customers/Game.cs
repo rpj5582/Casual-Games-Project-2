@@ -22,6 +22,7 @@ public class Game : MonoBehaviour {
             if(timer < 0) { timer = 0; }
         }
 
+        /*
         if(timer == 0)
         {
             for (int i = 0; i < 4; i++)
@@ -31,6 +32,6 @@ public class Game : MonoBehaviour {
                 CustomerManager.MoveCustomer(i+0, i);
             }
             timer--;
-        }
+        }*/
     }
 }
