@@ -7,7 +7,7 @@ public enum CustomerState
     IDLE, WALKING, DECIDING, WAITING, EATING, LEAVING
 }
 public class CustomerAI : MonoBehaviour {
-    static float maxSpeed = 5.0f;
+    static float maxSpeed = 1.5f;
 	private const float nodeRange = 0.10f; //distance a unit must be from a node in order to update path
 
     private CustomerState state = CustomerState.IDLE;
