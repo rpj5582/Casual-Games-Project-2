@@ -8,10 +8,10 @@ public enum CustomerState
 }
 public class CustomerAI : MonoBehaviour {
     static float maxSpeed = 5.0f;
-	private const float nodeRange = 1.0f; //distance a unit must be from a node in order to update path
+	private const float nodeRange = 0.10f; //distance a unit must be from a node in order to update path
 
     private CustomerState state = CustomerState.IDLE;
-    private List<PathNode> path;
+    public List<PathNode> path;
     private int pathProgress = 0;
     private PathNode next;
 
@@ -26,6 +26,7 @@ public class CustomerAI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+       // path = new List<PathNode>();
         //store a referance to all customers who are not this, for collision checking
         others = new List<CustomerAI>();
         foreach (CustomerAI o in FindObjectsOfType(typeof(CustomerAI)))

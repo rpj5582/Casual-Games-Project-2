@@ -33,8 +33,8 @@ public class CustomerManager : MonoBehaviour {
 
 		if (map == null) {
 			map = gameObject.AddComponent<PathMap> ();
-			//Instance.map = new PathMap ();
-
+            //Instance.map = new PathMap ();
+            Debug.Log("Error: map not found");
 		}
 
 		if (instance == null) {
