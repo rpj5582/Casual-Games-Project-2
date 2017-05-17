@@ -7,18 +7,33 @@ public class TitleMenu : MonoBehaviour
 {
     private GameNetworkManager networkManager;
 
+    [SerializeField]
+    private GameObject cancelSearchButton;
+
     private void Start()
     {
-        networkManager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<GameNetworkManager>();
+        GameObject networkGameObject = GameObject.FindGameObjectWithTag("NetworkManager");
+        networkManager = networkGameObject.GetComponent<GameNetworkManager>();
     }
 
     public void StartHost()
     {
-        networkManager.StartHost(null, 4);
+        if(!networkManager.isNetworkActive)
+            networkManager.StartHost(null, 4);
     }
 
     public void StartClient()
     {
-        networkManager.StartClient();
+        if (!networkManager.isNetworkActive)
+        {
+            networkManager.StartClient();
+            cancelSearchButton.SetActive(true);
+        } 
+    }
+
+    public void CancelSearch()
+    {
+        networkManager.StopClient();
+        cancelSearchButton.SetActive(false);
     }
 }

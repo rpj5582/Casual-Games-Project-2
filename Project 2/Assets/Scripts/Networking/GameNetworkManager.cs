@@ -6,13 +6,33 @@ using UnityEngine.Networking;
 
 public class GameNetworkManager : NetworkManager
 {
+    private NetworkDiscovery networkDiscovery;
     private int playerIDCount;
 
     bool sendAddPlayerRPC = false;
 
     private void Start()
     {
+        networkDiscovery = GetComponent<NetworkDiscovery>();
         
+    }
+
+    public override void OnStartHost()
+    {
+        networkDiscovery.Initialize();
+        networkDiscovery.StartAsServer();
+
+    }
+
+    public override void OnStartClient(NetworkClient client)
+    {
+        networkDiscovery.Initialize();
+        networkDiscovery.StartAsClient();
+    }
+
+    public override void OnStopClient()
+    {
+        networkDiscovery.StopBroadcast();
     }
 
     // Called on the client
