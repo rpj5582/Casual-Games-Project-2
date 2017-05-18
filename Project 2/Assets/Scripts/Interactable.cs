@@ -20,6 +20,13 @@ public class Interactable : NetworkBehaviour
         }
     }
 
+    private GUI gui;
+
+    void Start()
+    {
+        gui = GameObject.FindGameObjectWithTag("GUI").GetComponent<GUI>();
+    }
+
 	void OnCollisionEnter(Collision collision)
 	{
         if(isServer)
@@ -85,6 +92,34 @@ public class Interactable : NetworkBehaviour
         {
             otherInteractable.item = null;
         }
+
+        Interactable interactable = null;
+        if(gameObject.tag == "Player")
+        {
+            interactable = this;
+        }
+        else if(otherInteractable.tag == "Player")
+        {
+            interactable = otherInteractable;
+        }
+
+        if (interactable.item && interactable.item is OrderSlipItem)
+        {
+            OrderSlipItem orderSlip = (OrderSlipItem)interactable.item;
+            gui.ShowOrderSlip(orderSlip.ORDER);
+        }
+        else if (!interactable.item)
+        {
+            gui.HideOrderSlip();
+        }
+    }
+
+    [ClientRpc]
+    public void RpcSetItem(int itemID)
+    {
+        this.item = EntityLibrary.GET_ITEM(itemID).GetComponent<Item>();
+        item.transform.SetParent(itemPosition);
+        item.ResetTransform();
     }
 
 //	private void PickUpItem(PlayerInventory inventory)

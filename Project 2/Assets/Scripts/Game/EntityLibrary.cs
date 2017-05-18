@@ -7,9 +7,11 @@ using UnityEngine.Networking;
 public class EntityLibrary : NetworkBehaviour {
     static protected EntityLibrary INSTANCE;
 
+    public GameObject orderSlipPrefab;
+
     List<GameObject> players;
     [SyncVar]
-    int playerIDCount;
+    int playerIDCount, itemIDCount;
 
     [SerializeField]
     List<GameObject> 
@@ -94,6 +96,37 @@ public class EntityLibrary : NetworkBehaviour {
 
         INSTANCE.m_interactables.Add(player);
         player.GetComponent<Interactable>().ID = INSTANCE.m_interactables.Count - 1;
+    }
+
+    public static void SpawnItemOnTable(string itemType, int tableID)
+    {
+        INSTANCE.RpcSpawnItemOnTable(itemType, tableID);
+    }
+
+    [ClientRpc]
+    private void RpcSpawnItemOnTable(string itemType, int tableID)
+    {
+        Interactable table = GET_INTERACTABLE(tableID).GetComponent<Interactable>();
+        if (table.item != null)
+            return;
+
+        GameObject item;
+
+        switch(itemType)
+        {
+            case "OrderSlip":
+                item = Instantiate(orderSlipPrefab, transform.position, Quaternion.identity);
+                break;
+
+            default:
+                item = null;
+                break;
+        }
+
+        item.GetComponent<Item>().ID = itemIDCount++;
+        INSTANCE.m_items.Add(item);
+
+        table.RpcSetItem(item.GetComponent<Item>().ID);
     }
 
     GameObject getObjectAt(List<GameObject> list, int n)

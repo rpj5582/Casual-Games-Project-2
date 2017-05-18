@@ -9,6 +9,10 @@ public class PathNode : MonoBehaviour {
 
 	public int layer = 0; //determines how many connections this node is from origin
 
+    [SerializeField]
+    private Interactable interactable;
+    public Interactable Interactable { get { return interactable; } }
+
 	// Use this for initialization
 	void Start () {
 		//double check our parent knows we are child

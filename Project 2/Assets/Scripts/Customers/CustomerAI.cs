@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public enum CustomerState
 {
@@ -25,7 +26,7 @@ public class CustomerAI : MonoBehaviour {
     private GameObject follower = null;
 
     //satisfaction decreases over time when sitting at a table
-    private const float customerWaitTime = 30.0f;
+    private const float customerWaitTime = 90.0f;
     private float satisfaction = customerWaitTime;
     public bool satisfied = true; //false if the customer left due to time out
 
@@ -119,6 +120,10 @@ public class CustomerAI : MonoBehaviour {
                 }
                 state = CustomerState.IDLE;
                 satisfaction = customerWaitTime;
+                if(GetComponentInParent<NetworkIdentity>().isServer)
+                {
+                    EntityLibrary.SpawnItemOnTable("OrderSlip", path[path.Count - 1].Interactable.ID);
+                }
                 return;
 			} else {
 				next = path [pathProgress];

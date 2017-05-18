@@ -19,7 +19,7 @@ public class Item : NetworkBehaviour {
         }
     }
 
-	private void Start ()
+	protected virtual void Start ()
 	{
 		defaultRotation = transform.rotation;
 	}

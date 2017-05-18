@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class GUI : MonoBehaviour
 {
     public Canvas optionsCanvas;
+    public Canvas orderSlipCanvas;
+    public Image orderSlipImage;
+    public Sprite spaghettiImage;
+    public Sprite hotdogImage;
+    public Sprite drinkImage;
     private GameNetworkManager networkManager;
 
     private void Start()
@@ -21,6 +26,31 @@ public class GUI : MonoBehaviour
     public void HideOptions()
     {
         optionsCanvas.enabled = false;
+    }
+
+    public void ShowOrderSlip(Order orderType)
+    {
+        switch(orderType)
+        {
+            case Order.DRINK:
+                orderSlipImage.sprite = drinkImage;
+                break;
+
+            case Order.HOTDOG:
+                orderSlipImage.sprite = hotdogImage;
+                break;
+
+            case Order.SPAGHETTI:
+                orderSlipImage.sprite = spaghettiImage;
+                break;
+        }
+
+        orderSlipCanvas.enabled = true;
+    }
+
+    public void HideOrderSlip()
+    {
+        orderSlipCanvas.enabled = false;
     }
 
     public void Recalibrate()
